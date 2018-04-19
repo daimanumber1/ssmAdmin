@@ -1,15 +1,18 @@
 <template>
   <div class="head">
-    <el-row>
+    <el-row class="header">
       <el-col :span="24">
         <div class="grid-content bg-purple">
           <h3 class="topic">客户管理系统v2.0</h3>
         </div>
       </el-col>
     </el-row>
-    <hr />
     <el-container>
-      <el-aside class="aside" width="20%">1</el-aside>
+      <!-- 左侧导航条 -->
+      <el-aside class="aside" width="15%">
+      </el-aside>
+      <!-- -------------------- -->
+      <!-- ------------------- -->
       <el-main class="main">
         <!-- 主体部分的搜索框 -->
         <div class="slecetBox">
@@ -40,10 +43,10 @@
             </el-form-item>
           </el-form>
         </div>
-        <!--  -->
+        <!--用户信息 -->
         <div class="userInfo">
           <el-table :data="tableData" border style="width: 100%">
-            <el-table-column fixed prop="date" label="ID" width="150">
+            <el-table-column fixed prop="date" label="ID" width="100">
             </el-table-column>
             <el-table-column prop="name" label="姓名" width="120">
             </el-table-column>
@@ -53,9 +56,9 @@
             </el-table-column>
             <el-table-column prop="address" label="客户级别" width="150">
             </el-table-column>
-            <el-table-column prop="zip" label="固定电话" width="120">
+            <el-table-column prop="zip" label="固定电话" width="150">
             </el-table-column>
-            <el-table-column prop="zip" label="固定电话" width="120">
+            <el-table-column prop="zip" label="固定电话" width="180">
             </el-table-column>
             <el-table-column fixed="right" label="操作" width="100">
               <template slot-scope="scope">
@@ -64,6 +67,11 @@
               </template>
             </el-table-column>
           </el-table>
+        </div>
+        <!-- 分页 -->
+        <div>
+          <el-pagination background layout="prev, pager, next" :total="50" >
+          </el-pagination>
         </div>
       </el-main>
     </el-container>
@@ -82,55 +90,64 @@
       return {
         tableData: Array(20).fill(item),
         formInline: {
-          user: '',
-          region: ''
+          user: "",
+          region: ""
         },
         tableData: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }]
+            date: "2016-05-03",
+            name: "王小虎",
+            province: "上海",
+            city: "普陀区",
+            address: "上海市普陀区金沙江路 1518 弄",
+            zip: 200333
+          },
+          {
+            date: "2016-05-02",
+            name: "王小虎",
+            province: "上海",
+            city: "普陀区",
+            address: "上海市普陀区金沙江路 1518 弄",
+            zip: 200333
+          },
+          {
+            date: "2016-05-04",
+            name: "王小虎",
+            province: "上海",
+            city: "普陀区",
+            address: "上海市普陀区金沙江路 1518 弄",
+            zip: 200333
+          },
+          {
+            date: "2016-05-01",
+            name: "王小虎",
+            province: "上海",
+            city: "普陀区",
+            address: "上海市普陀区金沙江路 1518 弄",
+            zip: 200333
+          }
+        ]
       };
     },
     methods: {
       handleClick(row) {
         console.log(row);
-      }
-    },
+      },
+      onSubmit() {}
+    }
   };
 
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .header {
+    border-bottom: 1px solid #d3dce6;
+  }
+
   .topic {
     line-height: 40px;
     font-weight: normal;
-    color:#7d7b79
+    color: #7d7b79;
   }
 
   .el-col {
@@ -155,11 +172,28 @@
     line-height: 100%;
     padding-left: 10px;
     border-radius: 10px;
+    margin-bottom: 10px;
   }
 
   .el-form-item {
     margin-top: 7px;
     margin-bottom: 7px;
+  }
+  .el-pagination{
+    padding-top: 15px;
+    padding-left: 800px;
+  }
+</style>
+<style>
+  .el-pagination.is-background .btn-next,
+  .el-pagination.is-background .btn-prev,
+  .el-pagination.is-background .el-pager li {
+    margin: 0 2px;
+    min-width: 35px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 15px;
+    font-weight: 500;
   }
 
 </style>
