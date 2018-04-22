@@ -4,6 +4,6 @@ import java.util.List;
 
 import cn.itcast.ssm.pojo.BaseDict;
 
-public interface CustomerService {
+public interface SystemService {
 	public List<BaseDict> findBaseDictListByType(String typeCode);
 }
