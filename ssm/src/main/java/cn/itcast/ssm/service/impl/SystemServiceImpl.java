@@ -9,7 +9,7 @@ import cn.itcast.ssm.dao.BaseDickMapper;
 import cn.itcast.ssm.pojo.BaseDict;
 import cn.itcast.ssm.service.SystemService;
 
-@Service("systemService")
+@Service
 public class SystemServiceImpl implements SystemService{
 	@Autowired
 	private BaseDickMapper baseDickMapper;

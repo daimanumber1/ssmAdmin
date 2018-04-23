@@ -34,6 +34,11 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.35</version>
 		</dependency>
+		<dependency>
+		    <groupId>com.github.pagehelper</groupId>
+		    <artifactId>pagehelper</artifactId>
+		    <version>5.1.4</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>ssm</finalName>
