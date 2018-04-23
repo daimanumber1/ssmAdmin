@@ -19,7 +19,7 @@ export default {
     fun() {
       console.log(1);
       axios
-        .get("http://localhost:8080/ssm/hello")
+        .get("http://localhost:8080/ssm/home")
         .then(function(response) {
           console.log(response);
           console.log(response.data.username);

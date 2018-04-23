@@ -22,20 +22,17 @@
             </el-form-item>
             <el-form-item label="客户来源" size="medium ">
               <el-select v-model="formInline.region" placeholder="客户来源" style="width: 120px;">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+                <el-option v-for="clientSource in clientSourceList" :label="clientSource.dict_item_name" :value="clientSource.dict_id" :key="clientSource.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="所属行业">
               <el-select v-model="formInline.region" placeholder="所属行业" style="width: 120px;">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+                <el-option v-for="industry in industryList" :label="industry.dict_item_name" :value="industry.dict_id" :key="industry.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="客户级别">
               <el-select v-model="formInline.region" placeholder="客户级别" style="width: 120px;">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+                <el-option v-for="clientLevel in clientLevelList" :label="clientLevel.dict_item_name" :value="clientLevel.dict_id" :key="clientLevel.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -46,19 +43,19 @@
         <!--用户信息 -->
         <div class="userInfo">
           <el-table :data="tableData" border style="width: 100%">
-            <el-table-column fixed prop="date" label="ID" width="100">
+            <el-table-column fixed prop="cust_id" label="ID" width="100">
             </el-table-column>
-            <el-table-column prop="name" label="姓名" width="120">
+            <el-table-column prop="cust_name" label="姓名" width="120">
             </el-table-column>
-            <el-table-column prop="province" label="客户来源" width="120">
+            <el-table-column prop="cust_source" label="客户来源" width="120">
             </el-table-column>
-            <el-table-column prop="city" label="所属行业" width="120">
+            <el-table-column prop="cust_industry" label="所属行业" width="120">
             </el-table-column>
-            <el-table-column prop="address" label="客户级别" width="150">
+            <el-table-column prop="cust_level" label="客户级别" width="150">
             </el-table-column>
-            <el-table-column prop="zip" label="固定电话" width="150">
+            <el-table-column prop="cust_phone" label="固定电话" width="150">
             </el-table-column>
-            <el-table-column prop="zip" label="固定电话" width="180">
+            <el-table-column prop="cust_mobile" label="手机" width="180">
             </el-table-column>
             <el-table-column fixed="right" label="操作" width="100">
               <template slot-scope="scope">
@@ -79,121 +76,125 @@
 </template>
 
 <script>
-  export default {
-    name: "demo",
-    data() {
-      const item = {
-        date: "2016-05-02",
-        name: "王小虎",
-        address: "上海市普陀区金沙江路 1518 弄"
-      };
-      return {
-        tableData: Array(20).fill(item),
-        formInline: {
-          user: "",
-          region: ""
-        },
-        tableData: [{
-            date: "2016-05-03",
-            name: "王小虎",
-            province: "上海",
-            city: "普陀区",
-            address: "上海市普陀区金沙江路 1518 弄",
-            zip: 200333
-          },
-          {
-            date: "2016-05-02",
-            name: "王小虎",
-            province: "上海",
-            city: "普陀区",
-            address: "上海市普陀区金沙江路 1518 弄",
-            zip: 200333
-          },
-          {
-            date: "2016-05-04",
-            name: "王小虎",
-            province: "上海",
-            city: "普陀区",
-            address: "上海市普陀区金沙江路 1518 弄",
-            zip: 200333
-          },
-          {
-            date: "2016-05-01",
-            name: "王小虎",
-            province: "上海",
-            city: "普陀区",
-            address: "上海市普陀区金沙江路 1518 弄",
-            zip: 200333
-          }
-        ]
-      };
-    },
-    methods: {
-      handleClick(row) {
-        console.log(row);
-      },
-      onSubmit() {}
-    }
-  };
+import axios from "axios";
 
+export default {
+  name: "demo",
+  data() {
+    const item = {
+      date: "2016-05-02",
+      name: "王小虎",
+      address: "上海市普陀区金沙江路 1518 弄"
+    };
+    return {
+      // tableData: Array(20).fill(item),
+      clientLevelList:[],
+      clientSourceList:[],
+      industryList:[],
+      formInline: {
+        user: "",
+        region: ""
+      },
+      tableData: [
+        {
+          cust_id: "2016-05-03",
+          cust_name: "王小虎",
+          cust_source: "上海",
+          cust_industry: "普陀区",
+          cust_level: "上海市普陀区金沙江路 1518 弄",
+          cust_phone:13884443334,
+          cust_mobile: 200331113
+
+        },
+        {
+          cust_id: "2016-05-02",
+          cust_name: "王小虎",
+          cust_source: "上海",
+          cust_industry: "普陀区",
+          cust_level: "上海市普陀区金沙江路 1518 弄",
+          cust_phone:1388444,
+          cust_mobile: 20033311
+        }
+      ]
+    };
+  },
+  methods: {
+    handleClick(row) {
+      console.log(row);
+    },
+    onSubmit() {},
+    fun() {
+      axios.get("http://localhost:8080/ssm/home").then(res => {
+        console.log(res.data);
+        console.log(res.data.page);
+        this.clientSourceList=res.data.clientSourceList;;
+        this.industryList=res.data.industryList;
+        this.clientLevelList=res.data.clientLevelList;
+        this.tableData=res.data.page;
+      });
+    }
+  },
+  mounted() {
+    this.fun();
+  }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .header {
-    border-bottom: 1px solid #d3dce6;
-  }
+.header {
+  border-bottom: 1px solid #d3dce6;
+}
 
-  .topic {
-    line-height: 40px;
-    font-weight: normal;
-    color: #7d7b79;
-  }
+.topic {
+  line-height: 40px;
+  font-weight: normal;
+  color: #7d7b79;
+}
 
-  .el-col {
-    border-radius: 4px;
-  }
+.el-col {
+  border-radius: 4px;
+}
 
-  .bg-purple {
-    background: #f8f8f8;
-    height: 40px;
-  }
+.bg-purple {
+  background: #f8f8f8;
+  height: 40px;
+}
 
-  aside {
-    background: #f8f8f8;
-  }
+aside {
+  background: #f8f8f8;
+}
 
-  .main {
-    /* background: gray; */
-  }
+.main {
+  /* background: gray; */
+}
 
-  .slecetBox {
-    border: 1px solid #d3dce6;
-    line-height: 100%;
-    padding-left: 10px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-  }
+.slecetBox {
+  border: 1px solid #d3dce6;
+  line-height: 100%;
+  padding-left: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
 
-  .el-form-item {
-    margin-top: 7px;
-    margin-bottom: 7px;
-  }
-  .el-pagination{
-    padding-top: 15px;
-    padding-left: 800px;
-  }
+.el-form-item {
+  margin-top: 7px;
+  margin-bottom: 7px;
+}
+.el-pagination {
+  padding-top: 15px;
+  padding-left: 800px;
+}
 </style>
 <style>
-  .el-pagination.is-background .btn-next,
-  .el-pagination.is-background .btn-prev,
-  .el-pagination.is-background .el-pager li {
-    margin: 0 2px;
-    min-width: 35px;
-    height: 35px;
-    line-height: 35px;
-    font-size: 15px;
-    font-weight: 500;
-  }
-
+.el-pagination.is-background .btn-next,
+.el-pagination.is-background .btn-prev,
+.el-pagination.is-background .el-pager li {
+  margin: 0 2px;
+  min-width: 35px;
+  height: 35px;
+  line-height: 35px;
+  font-size: 15px;
+  font-weight: 500;
+}
 </style>
