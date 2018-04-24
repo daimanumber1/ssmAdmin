@@ -67,7 +67,14 @@
         </div>
         <!-- 分页 -->
         <div>
-          <el-pagination background layout="prev, pager, next" :total="50" >
+          <el-pagination background layout="prev, pager, next" 
+          :total="total" 
+          :current-page="currPage"
+          @current-change="handleCurrentChange" 
+          @size-change="handleSizeChange"
+          :page-sizes="[10, 20, 30, 40]"
+           :page-size="pageSize"
+          >
           </el-pagination>
         </div>
       </el-main>
@@ -88,34 +95,17 @@ export default {
     };
     return {
       // tableData: Array(20).fill(item),
-      clientLevelList:[],
-      clientSourceList:[],
-      industryList:[],
+      clientLevelList: [],
+      clientSourceList: [],
+      industryList: [],
       formInline: {
         user: "",
         region: ""
       },
-      tableData: [
-        {
-          cust_id: "2016-05-03",
-          cust_name: "王小虎",
-          cust_source: "上海",
-          cust_industry: "普陀区",
-          cust_level: "上海市普陀区金沙江路 1518 弄",
-          cust_phone:13884443334,
-          cust_mobile: 200331113
-
-        },
-        {
-          cust_id: "2016-05-02",
-          cust_name: "王小虎",
-          cust_source: "上海",
-          cust_industry: "普陀区",
-          cust_level: "上海市普陀区金沙江路 1518 弄",
-          cust_phone:1388444,
-          cust_mobile: 20033311
-        }
-      ]
+      tableData: [],
+      currPage: 1,
+      total: 0,
+      pageSize: 10
     };
   },
   methods: {
@@ -123,14 +113,22 @@ export default {
       console.log(row);
     },
     onSubmit() {},
+    handleCurrentChange(val) {
+      console.log(val);
+    },
+    handleSizeChange(val) {
+      console.log(val);
+    },
     fun() {
       axios.get("http://localhost:8080/ssm/home").then(res => {
-        console.log(res.data);
-        console.log(res.data.page);
-        this.clientSourceList=res.data.clientSourceList;;
-        this.industryList=res.data.industryList;
-        this.clientLevelList=res.data.clientLevelList;
-        this.tableData=res.data.page;
+        console.log(res.data.aa);
+        console.log(res.data.aa.total);
+        this.clientSourceList = res.data.clientSourceList;
+        this.industryList = res.data.industryList;
+        this.clientLevelList = res.data.clientLevelList;
+        this.tableData = res.data.page;
+        // 分页
+        this.total = res.data.aa.total;
       });
     }
   },
