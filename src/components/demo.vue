@@ -21,22 +21,22 @@
               <el-input v-model="formInline.user" placeholder="客户名称"></el-input>
             </el-form-item>
             <el-form-item label="客户来源" size="medium ">
-              <el-select v-model="formInline.region" placeholder="客户来源" style="width: 120px;">
+              <el-select v-model="formInline.clientSource" placeholder="客户来源" style="width: 120px;">
                 <el-option v-for="clientSource in clientSourceList" :label="clientSource.dict_item_name" :value="clientSource.dict_id" :key="clientSource.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="所属行业">
-              <el-select v-model="formInline.region" placeholder="所属行业" style="width: 120px;">
+              <el-select v-model="formInline.industry" placeholder="所属行业" style="width: 120px;">
                 <el-option v-for="industry in industryList" :label="industry.dict_item_name" :value="industry.dict_id" :key="industry.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="客户级别">
-              <el-select v-model="formInline.region" placeholder="客户级别" style="width: 120px;">
+              <el-select v-model="formInline.clientLevel" placeholder="客户级别" style="width: 120px;">
                 <el-option v-for="clientLevel in clientLevelList" :label="clientLevel.dict_item_name" :value="clientLevel.dict_id" :key="clientLevel.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSubmit">查询</el-button>
+              <el-button type="primary" @click="queryClient">查询</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -59,22 +59,34 @@
             </el-table-column>
             <el-table-column fixed="right" label="操作" width="100">
               <template slot-scope="scope">
-                <el-button @click="handleClick(scope.row)" type="text" size="medium ">修改</el-button>
-                <el-button type="text" size="medium ">删除</el-button>
+                <el-button @click="updateClient(scope.row)" type="text" size="medium ">修改</el-button>
+                <el-button type="text" size="medium" @click="deleteClient(scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
+          <!-- 弹出的修改框 -->
+          <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+              <el-form :model="form">
+                  <el-form-item label="活动名称" :label-width="formLabelWidth">
+                    <el-input v-model="form.name" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="活动区域" :label-width="formLabelWidth">
+                    <el-select v-model="form.region" placeholder="请选择活动区域">
+                      <el-option label="区域一" value="shanghai"></el-option>
+                      <el-option label="区域二" value="beijing"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                  <el-button @click="dialogFormVisible = false">取 消</el-button>
+                  <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                </div>
+            </el-dialog>
         </div>
         <!-- 分页 -->
         <div>
-          <el-pagination background layout="prev, pager, next" 
-          :total="total" 
-          :current-page="currPage"
-          @current-change="handleCurrentChange" 
-          @size-change="handleSizeChange"
-          :page-sizes="[10, 20, 30, 40]"
-           :page-size="pageSize"
-          >
+          <el-pagination background layout="prev, pager, next" :total="total" :current-page="currPage" @current-change="handleCurrentChange"
+            @size-change="handleSizeChange" :page-sizes="[10, 20, 30, 40]" :page-size="pageSize">
           </el-pagination>
         </div>
       </el-main>
@@ -83,116 +95,197 @@
 </template>
 
 <script>
-import axios from "axios";
+  import axios from "axios";
 
-export default {
-  name: "demo",
-  data() {
-    const item = {
-      date: "2016-05-02",
-      name: "王小虎",
-      address: "上海市普陀区金沙江路 1518 弄"
-    };
-    return {
-      // tableData: Array(20).fill(item),
-      clientLevelList: [],
-      clientSourceList: [],
-      industryList: [],
-      formInline: {
-        user: "",
-        region: ""
+  export default {
+    name: "demo",
+    data() {
+      return {
+        clientLevelList: [],
+        clientSourceList: [],
+        industryList: [],
+        formInline: {
+          user: "",
+          clientSource: "",
+          industry: "",
+          clientLevel: ""
+        },
+        tableData: [],
+        currPage: 1,
+        total: 0,
+        pageSize: 10,
+        dialogFormVisible: false,
+        form: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        },
+        formLabelWidth: '120px'
+      };
+    },
+    methods: {
+      onSubmit() {
+        console.log('submit!');
       },
-      tableData: [],
-      currPage: 1,
-      total: 0,
-      pageSize: 10
-    };
-  },
-  methods: {
-    handleClick(row) {
-      console.log(row);
+      updateClient(val) {
+        this.dialogFormVisible=true;
+        console.log(val.cust_id);
+      },
+      deleteClient(val) {
+        this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          })
+          .then(() => {
+            // console.log(val.cust_id);
+            axios
+              .get("http://localhost:8080/ssm/delete", {
+                params: {
+                  id: val.cust_id
+                }
+              })
+              .then(res => {
+                console.log(res.data.idDelete);
+                console.log(typeof res.data.idDelete);
+                if (res.data.idDelete == true) {
+                  this.$message({
+                    type: "success",
+                    message: "删除成功!"
+                  });
+                  this.fun();
+                } else {
+                  console.log(1);
+                }
+              });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消删除"
+            });
+          });
+      },
+      queryClient() {
+        this.currPage = 1;
+        axios
+          .get("http://localhost:8080/ssm/hh", {
+            params: {
+              currPage: this.currPage,
+              a: this.formInline.user,
+              b: this.formInline.clientSource,
+              c: this.formInline.industry,
+              d: this.formInline.clientLevel
+            }
+          })
+          .then(res => {
+            // console.log(res.data.aa);
+            // console.log(res.data.aa.total);
+            this.clientSourceList = res.data.clientSourceList;
+            this.industryList = res.data.industryList;
+            this.clientLevelList = res.data.clientLevelList;
+            this.tableData = res.data.page;
+            // 分页
+            this.total = res.data.aa.total;
+          });
+      },
+      handleCurrentChange(val) {
+        console.log(typeof val);
+        this.currPage = val;
+        this.fun();
+      },
+      handleSizeChange(val) {
+        console.log(val);
+      },
+      fun() {
+        axios
+          .get("http://localhost:8080/ssm/home", {
+            params: {
+              currPage: this.currPage
+            }
+          })
+          .then(res => {
+            // console.log(res.data.aa);
+            // console.log(res.data.aa.total);
+            this.clientSourceList = res.data.clientSourceList;
+            this.industryList = res.data.industryList;
+            this.clientLevelList = res.data.clientLevelList;
+            this.tableData = res.data.page;
+            // 分页
+            this.total = res.data.aa.total;
+          });
+      }
     },
-    onSubmit() {},
-    handleCurrentChange(val) {
-      console.log(val);
-    },
-    handleSizeChange(val) {
-      console.log(val);
-    },
-    fun() {
-      axios.get("http://localhost:8080/ssm/home").then(res => {
-        console.log(res.data.aa);
-        console.log(res.data.aa.total);
-        this.clientSourceList = res.data.clientSourceList;
-        this.industryList = res.data.industryList;
-        this.clientLevelList = res.data.clientLevelList;
-        this.tableData = res.data.page;
-        // 分页
-        this.total = res.data.aa.total;
-      });
+    mounted() {
+      this.fun();
     }
-  },
-  mounted() {
-    this.fun();
-  }
-};
+  };
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.header {
-  border-bottom: 1px solid #d3dce6;
-}
+  .header {
+    border-bottom: 1px solid #d3dce6;
+  }
 
-.topic {
-  line-height: 40px;
-  font-weight: normal;
-  color: #7d7b79;
-}
+  .topic {
+    line-height: 40px;
+    font-weight: normal;
+    color: #7d7b79;
+  }
 
-.el-col {
-  border-radius: 4px;
-}
+  .el-col {
+    border-radius: 4px;
+  }
 
-.bg-purple {
-  background: #f8f8f8;
-  height: 40px;
-}
+  .bg-purple {
+    background: #f8f8f8;
+    height: 40px;
+  }
 
-aside {
-  background: #f8f8f8;
-}
+  aside {
+    background: #f8f8f8;
+  }
 
-.main {
-  /* background: gray; */
-}
+  .main {
+    /* background: gray; */
+  }
 
-.slecetBox {
-  border: 1px solid #d3dce6;
-  line-height: 100%;
-  padding-left: 10px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-}
+  .slecetBox {
+    border: 1px solid #d3dce6;
+    line-height: 100%;
+    padding-left: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
 
-.el-form-item {
-  margin-top: 7px;
-  margin-bottom: 7px;
-}
-.el-pagination {
-  padding-top: 15px;
-  padding-left: 800px;
-}
+  .el-form-item {
+    margin-top: 7px;
+    margin-bottom: 7px;
+  }
+
+  .el-pagination {
+    padding-top: 15px;
+    padding-left: 10px;
+  }
+
 </style>
 <style>
-.el-pagination.is-background .btn-next,
-.el-pagination.is-background .btn-prev,
-.el-pagination.is-background .el-pager li {
-  margin: 0 2px;
-  min-width: 35px;
-  height: 35px;
-  line-height: 35px;
-  font-size: 15px;
-  font-weight: 500;
-}
+  .el-pagination.is-background .btn-next,
+  .el-pagination.is-background .btn-prev,
+  .el-pagination.is-background .el-pager li {
+    margin: 0 2px;
+    min-width: 35px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
 </style>
