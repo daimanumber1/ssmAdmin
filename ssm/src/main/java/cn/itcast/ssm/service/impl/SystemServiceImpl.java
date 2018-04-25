@@ -9,13 +9,17 @@ import cn.itcast.ssm.dao.BaseDickMapper;
 import cn.itcast.ssm.pojo.BaseDict;
 import cn.itcast.ssm.service.SystemService;
 
-@Service
+@Service("systemService")
 public class SystemServiceImpl implements SystemService{
 	@Autowired
 	private BaseDickMapper baseDickMapper;
 	public List<BaseDict> findBaseDictListByType(String typeCode) {
 		List<BaseDict> list = baseDickMapper.findBaseDictListByType(typeCode);
 		return list;
+	}
+	public BaseDict findBaseDictById(String id) {
+		BaseDict b = baseDickMapper.findBaseDictById(id);
+		return b;
 	}
 
 }

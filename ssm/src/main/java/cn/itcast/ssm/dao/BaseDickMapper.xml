@@ -7,4 +7,9 @@
 		select *
 		from base_dict where dict_type_code=#{typeCode}
 	</select>
+	<select id="findBaseDictById" parameterType="String"
+		resultType="cn.itcast.ssm.pojo.BaseDict">
+		select *
+		from base_dict where dict_id=#{id}
+	</select>
 </mapper>

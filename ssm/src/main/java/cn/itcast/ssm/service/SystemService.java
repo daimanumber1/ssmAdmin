@@ -6,4 +6,5 @@ import cn.itcast.ssm.pojo.BaseDict;
 
 public interface SystemService {
 	public List<BaseDict> findBaseDictListByType(String typeCode);
+	public BaseDict findBaseDictById(String id);
 }
