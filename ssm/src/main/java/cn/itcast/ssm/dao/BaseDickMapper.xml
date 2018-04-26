@@ -12,4 +12,9 @@
 		select *
 		from base_dict where dict_id=#{id}
 	</select>
+	<select id="findBaseDickByItemName" parameterType="String"
+		resultType="cn.itcast.ssm.pojo.BaseDict">
+		select *
+		from base_dict where dict_item_name like #{itemName}
+	</select>
 </mapper>

@@ -126,16 +126,14 @@ public class CustomerController {
 		response.setHeader("Access-Control-Allow-Credentials", "true");
 		response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
 		ModelAndView mv = new ModelAndView();
-		System.out.println("id---"+id);
-		System.out.println("name----" + name);
-		System.out.println("source----" + source);
-		System.out.println("industry----" + industry);
-		System.out.println("level----" + level);
-		System.out.println("linkman----" + linkman);
-		System.out.println("phone----" + phone);
-		System.out.println("mobile----" + mobile);
-		System.out.println("zipcode----" + zipcode);
-		System.out.println("address----" + address);
+//		System.out.println("source----" + source);
+//		System.out.println("industry----" + industry);
+//		System.out.println("level----" + level);
+//		System.out.println("linkman----" + linkman);
+//		System.out.println("phone----" + phone);
+//		System.out.println("mobile----" + mobile);
+//		System.out.println("zipcode----" + zipcode);
+//		System.out.println("address----" + address);
 		int b = customerService.updateClient(id, name, source, industry, level, linkman, phone, mobile, zipcode,
 				address);
 		mv.addObject("isUpdate", b);

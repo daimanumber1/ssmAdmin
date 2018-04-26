@@ -54,7 +54,17 @@ public class CustomerServiceImpl implements CustomerService {
 
 	public int updateClient(String id, String name, String source, String industry, String level, String linkman,
 			String phone, String mobile, String zipcode, String address) {
-		int b = customerMapper.updateClient(id, name, source, industry, level, linkman, phone, mobile, zipcode, address);
-		return b;
+		BaseDict b1 = baseDickMapper.findBaseDickByItemName(level);
+		BaseDict b2 = baseDickMapper.findBaseDickByItemName(source);
+		BaseDict b3 = baseDickMapper.findBaseDickByItemName(industry);
+		level = b1.getDict_id();
+		source = b2.getDict_id();
+		industry = b3.getDict_id();
+		System.out.println("level-----" + level);
+		System.out.println("source-----" + source);
+		System.out.println("industry-----" + industry);
+		 int b = customerMapper.updateClient(id, name, source, industry, level,linkman, phone, mobile, zipcode, address);
+		 return b;
+//		return 0;
 	}
 }
