@@ -65,23 +65,47 @@
             </el-table-column>
           </el-table>
           <!-- 弹出的修改框 -->
-          <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
-              <el-form :model="form">
-                  <el-form-item label="活动名称" :label-width="formLabelWidth">
-                    <el-input v-model="form.name" auto-complete="off"></el-input>
-                  </el-form-item>
-                  <el-form-item label="活动区域" :label-width="formLabelWidth">
-                    <el-select v-model="form.region" placeholder="请选择活动区域">
-                      <el-option label="区域一" value="shanghai"></el-option>
-                      <el-option label="区域二" value="beijing"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                  <el-button @click="dialogFormVisible = false">取 消</el-button>
-                  <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-                </div>
-            </el-dialog>
+          <el-dialog title="系该用户信息" :visible.sync="dialogFormVisible">
+            <el-form :model="nowItem" label-width="80px">
+              <el-form-item label="客户名称">
+                <el-input v-model="nowItem.cust_name" placeholder="客户名称" style="width: 500px"></el-input>
+              </el-form-item>
+              <el-form-item label="客户来源" size="medium ">
+                <el-select v-model="nowItem.cust_source" placeholder="客户来源" style="width: 500px">
+                  <el-option v-for="clientSource in clientSourceList" :label="clientSource.dict_item_name" :value="clientSource.dict_id" :key="clientSource.id"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="所属行业">
+                <el-select v-model="nowItem.cust_industry" placeholder="所属行业" style="width: 500px">
+                  <el-option v-for="industry in industryList" :label="industry.dict_item_name" :value="industry.dict_id" :key="industry.id"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="客户级别">
+                <el-select v-model="nowItem.cust_level" placeholder="客户级别" style="width: 500px">
+                  <el-option v-for="clientLevel in clientLevelList" :label="clientLevel.dict_item_name" :value="clientLevel.dict_id" :key="clientLevel.id"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="联系人">
+                <el-input v-model="nowItem.cust_linkman" placeholder="联系人" style="width: 500px"></el-input>
+              </el-form-item>
+              <el-form-item label="固定电话">
+                <el-input v-model="nowItem.cust_phone" placeholder="固定电话" style="width: 500px"></el-input>
+              </el-form-item>
+              <el-form-item label="手机  ">
+                <el-input v-model="nowItem.cust_mobile" placeholder="手机  " style="width: 500px"></el-input>
+              </el-form-item>
+              <el-form-item label="邮政编码">
+                <el-input v-model="nowItem.cust_zipcode" placeholder="邮政编码" style="width: 500px"></el-input>
+              </el-form-item>
+              <el-form-item label="联系地址">
+                <el-input v-model="nowItem.cust_address" placeholder="联系地址" style="width: 500px"></el-input>
+              </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="dialogFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click="saveUpadate">保存修改</el-button>
+            </div>
+          </el-dialog>
         </div>
         <!-- 分页 -->
         <div>
@@ -108,33 +132,68 @@
           user: "",
           clientSource: "",
           industry: "",
-          clientLevel: ""
+          clientLevel: "",
+          linkman: "",
+          phone: "",
+          mobile: "",
+          postCode: "",
+          address: "",
         },
         tableData: [],
         currPage: 1,
         total: 0,
         pageSize: 10,
         dialogFormVisible: false,
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        },
-        formLabelWidth: '120px'
+        nowItem: {
+          cust_name: "",
+          cust_source: "",
+          cust_industry: "",
+          cust_level: "",
+          cust_linkman: "",
+          cust_phone: "",
+          cust_mobile: "",
+          cust_zipcode: "",
+          cust_address: ""
+        }
       };
+
     },
     methods: {
       onSubmit() {
-        console.log('submit!');
+        console.log("submit!");
       },
       updateClient(val) {
-        this.dialogFormVisible=true;
-        console.log(val.cust_id);
+        this.dialogFormVisible = true;
+        this.nowItem = val;
+        // console.log(val.cust_id);
+        // console.log(this.nowItem);
+      },
+      saveUpadate() {
+        axios.get("http://localhost:8080/ssm/update", {
+          params: {
+            id: this.nowItem.cust_id,
+            name: this.nowItem.cust_name,
+            source: this.nowItem.cust_source,
+            industry: this.nowItem.cust_industry,
+            level: this.nowItem.cust_level,
+            linkman: this.nowItem.cust_linkman,
+            phone: this.nowItem.cust_phone,
+            mobile: this.nowItem.cust_mobile,
+            zipcode: this.nowItem.cust_zipcode,
+            address: this.nowItem.cust_address
+          }
+        }).then(res => {
+          console.log(res.data);
+          console.log(typeof res.data.isUpdate);
+          this.$message({
+            type: "success",
+            message: "保存成功!"
+          })
+          this.fun();
+          // window.location="/";
+          this.dialogFormVisible = false;
+        })
+
       },
       deleteClient(val) {
         this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
@@ -151,8 +210,8 @@
                 }
               })
               .then(res => {
-                console.log(res.data.idDelete);
-                console.log(typeof res.data.idDelete);
+                // console.log(res.data.isDelete);
+                // console.log(typeof res.data.isDelete);
                 if (res.data.idDelete == true) {
                   this.$message({
                     type: "success",
@@ -184,7 +243,7 @@
             }
           })
           .then(res => {
-            // console.log(res.data.aa);
+            // console.log(res.data.page);
             // console.log(res.data.aa.total);
             this.clientSourceList = res.data.clientSourceList;
             this.industryList = res.data.industryList;
@@ -210,7 +269,7 @@
             }
           })
           .then(res => {
-            // console.log(res.data.aa);
+            // console.log(res.data.page);
             // console.log(res.data.aa.total);
             this.clientSourceList = res.data.clientSourceList;
             this.industryList = res.data.industryList;
