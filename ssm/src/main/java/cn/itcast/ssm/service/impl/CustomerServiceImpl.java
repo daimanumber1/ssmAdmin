@@ -35,7 +35,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	public List<Customer> test(String a, String b, String c, String d) {
-		List<Customer> list = customerMapper.test(a,b,c,d);
+		List<Customer> list = customerMapper.test(a, b, c, d);
 		for (Customer l : list) {
 			BaseDict b1 = baseDickMapper.findBaseDictById(l.getCust_industry());
 			BaseDict b2 = baseDickMapper.findBaseDictById(l.getCust_level());
@@ -49,6 +49,12 @@ public class CustomerServiceImpl implements CustomerService {
 
 	public boolean deleteClient(String id) {
 		boolean b = customerMapper.deleteClient(id);
+		return b;
+	}
+
+	public int updateClient(String id, String name, String source, String industry, String level, String linkman,
+			String phone, String mobile, String zipcode, String address) {
+		int b = customerMapper.updateClient(id, name, source, industry, level, linkman, phone, mobile, zipcode, address);
 		return b;
 	}
 }

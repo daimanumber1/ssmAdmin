@@ -9,7 +9,8 @@
 			AND cust_source like #{b} </if> <if test="c != null"> AND cust_industry like 
 			#{c} </if> <if test="d != null"> AND cust_level like #{d} </if> -->
 	</select>
-	<select id="test" resultType="cn.itcast.ssm.pojo.Customer" parameterType="String">
+	<select id="test" resultType="cn.itcast.ssm.pojo.Customer"
+		parameterType="String">
 		select *
 		from customer where true
 		<if test="a != '' and a!=null">
@@ -28,4 +29,17 @@
 	<delete id="deleteClient">
 		delete from customer where cust_id = #{id}
 	</delete>
+	<update id="updateClient" parameterType="String">
+		update customer set
+		cust_name = #{name},
+		cust_source = #{source},
+		cust_industry = #{industry},
+		cust_level = #{level},
+		cust_linkman = #{linkman},
+		cust_phone = #{phone},
+		cust_mobile = #{mobile},
+		cust_zipcode = #{zipcode},
+		cust_address = #{address} 
+		where cust_id = #{id}
+	</update>
 </mapper>

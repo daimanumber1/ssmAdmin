@@ -34,8 +34,10 @@ public class CustomerController {
 
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public ModelAndView getHome(@RequestParam(value = "currPage") int currPage, HttpServletResponse response,
-			@RequestParam(value = "a",required=false) String a, @RequestParam(value = "b",required=false) String b,
-			@RequestParam(value = "c",required=false) String c, @RequestParam(value = "d",required=false) String d) {
+			@RequestParam(value = "a", required = false) String a,
+			@RequestParam(value = "b", required = false) String b,
+			@RequestParam(value = "c", required = false) String c,
+			@RequestParam(value = "d", required = false) String d) {
 		response.setHeader("Access-Control-Allow-Headers", "X-Requested-With, accept,content-type, exception");
 		response.setHeader("Access-Control-Allow-Methods", "GET, POST");
 		response.setHeader("Access-Control-Allow-Credentials", "true");
@@ -70,8 +72,8 @@ public class CustomerController {
 	}
 
 	@RequestMapping("/hh")
-	public ModelAndView d(@RequestParam(value = "currPage") int currPage,HttpServletResponse response, @RequestParam(value = "a", required = false) String a, String b,
-			String c, String d) {
+	public ModelAndView d(@RequestParam(value = "currPage") int currPage, HttpServletResponse response,
+			@RequestParam(value = "a", required = false) String a, String b, String c, String d) {
 		response.setHeader("Access-Control-Allow-Headers", "X-Requested-With, accept,content-type, exception");
 		response.setHeader("Access-Control-Allow-Methods", "GET, POST");
 		response.setHeader("Access-Control-Allow-Credentials", "true");
@@ -93,39 +95,53 @@ public class CustomerController {
 		// --------------------分割线---------------
 		// 分页插件pageHelper
 		PageHelper.startPage(currPage, 10);
-		List<Customer> list = customerService.test(a,b,c,d);
+		List<Customer> list = customerService.test(a, b, c, d);
 		PageInfo page = new PageInfo(list);
 		mv.addObject("page", list);
 		mv.addObject("aa", page);
 		mv.setView(new MappingJackson2JsonView());
 		return mv;
 	}
+
 	@RequestMapping("/delete")
-	public ModelAndView deleteClient(HttpServletResponse response,@RequestParam("id") String id) {
+	public ModelAndView deleteClient(HttpServletResponse response, @RequestParam("id") String id) {
 		response.setHeader("Access-Control-Allow-Headers", "X-Requested-With, accept,content-type, exception");
 		response.setHeader("Access-Control-Allow-Methods", "GET, POST");
 		response.setHeader("Access-Control-Allow-Credentials", "true");
 		response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
 		ModelAndView mv = new ModelAndView();
 		boolean b = customerService.deleteClient(id);
-		mv.addObject("idDelete",b);
+		mv.addObject("isDelete", b);
 		mv.setView(new MappingJackson2JsonView());
 		return mv;
-		
+
 	}
-	// // @CrossOrigin(origins = "*", maxAge = 3600)
-	// @RequestMapping(value = "/hello", method = RequestMethod.GET)
-	// public ModelAndView get(HttpServletResponse response) {
-	// // res.setHeader("Access-Control-Allow-Origin", "*");
-	// response.setHeader("Access-Control-Allow-Headers", "X-Requested-With, accept,
-	// content-type, exception");
-	// response.setHeader("Access-Control-Allow-Methods", "GET, HEAD, POST, PUT,
-	// DELETE, TRACE, OPTIONS, PATCH");
-	// response.setHeader("Access-Control-Allow-Credentials", "true");
-	// response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
-	// ModelAndView mv = new ModelAndView("fq");
-	// mv.addObject("username", "qqqqqqqqqqq");
-	// mv.setView(new MappingJackson2JsonView());
-	// return mv;
-	// }
+
+	@RequestMapping("/update")
+	public ModelAndView updateClient(HttpServletResponse response, String id, @RequestParam("name") String name,
+			String source, String industry, String level, String linkman, String phone, String mobile, String zipcode,
+			String address) {
+		response.setHeader("Access-Control-Allow-Headers", "X-Requested-With, accept,content-type, exception");
+		response.setHeader("Access-Control-Allow-Methods", "GET, POST");
+		response.setHeader("Access-Control-Allow-Credentials", "true");
+		response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
+		ModelAndView mv = new ModelAndView();
+		System.out.println("id---"+id);
+		System.out.println("name----" + name);
+		System.out.println("source----" + source);
+		System.out.println("industry----" + industry);
+		System.out.println("level----" + level);
+		System.out.println("linkman----" + linkman);
+		System.out.println("phone----" + phone);
+		System.out.println("mobile----" + mobile);
+		System.out.println("zipcode----" + zipcode);
+		System.out.println("address----" + address);
+		int b = customerService.updateClient(id, name, source, industry, level, linkman, phone, mobile, zipcode,
+				address);
+		mv.addObject("isUpdate", b);
+		System.out.println(b);
+		mv.setView(new MappingJackson2JsonView());
+		return mv;
+
+	}
 }
