@@ -57,6 +57,9 @@ public class CustomerServiceImpl implements CustomerService {
 		BaseDict b1 = baseDickMapper.findBaseDickByItemName(level);
 		BaseDict b2 = baseDickMapper.findBaseDickByItemName(source);
 		BaseDict b3 = baseDickMapper.findBaseDickByItemName(industry);
+		System.out.println(level+"-------");
+		System.out.println(source+"--------");
+		System.out.println(industry+"----------");
 		level = b1.getDict_id();
 		source = b2.getDict_id();
 		industry = b3.getDict_id();

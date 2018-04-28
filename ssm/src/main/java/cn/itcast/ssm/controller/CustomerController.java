@@ -137,7 +137,7 @@ public class CustomerController {
 		int b = customerService.updateClient(id, name, source, industry, level, linkman, phone, mobile, zipcode,
 				address);
 		mv.addObject("isUpdate", b);
-		System.out.println(b);
+		System.out.println(b+"return");
 		mv.setView(new MappingJackson2JsonView());
 		return mv;
 
