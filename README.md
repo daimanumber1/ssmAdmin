@@ -54,12 +54,12 @@ npm run build --report
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
 
-###登录页面
+### 登录页面
 
 ![image](https://github.com/daimanumber1/pictures/blob/master/ssmAdmin/login.png)
 
 
-###home页面
+### home页面
 
 
 ![image](https://github.com/daimanumber1/pictures/blob/master/ssmAdmin/img1.png)
