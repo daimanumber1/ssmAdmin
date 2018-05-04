@@ -56,7 +56,7 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 ###登录页面
 
-![image](https://github.com/daimanumber1/pictures/blob/master/ssmAdmin/img1.png)
+![image](https://github.com/daimanumber1/pictures/blob/master/ssmAdmin/login.png)
 
 
 ###home页面
