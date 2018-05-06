@@ -26,8 +26,10 @@
 <script>
 import axios from "axios";
 axios.defaults.withCredentials = true;
+import cookieUtils from "../utils/cookieUtils";
 export default {
   name: "HelloWorld",
+  // router,
   data() {
     return {
       form: {
@@ -39,19 +41,23 @@ export default {
   methods: {
     dologin() {
       axios
-        .get("/doLogin", {
+        .get("/api/doLogin", {
           params: {
             username: "admin",
             password: "admin"
           }
         })
-        .then(function(response) {
-          console.log(response);
+        .then((response) =>{
+          console.log(document.cookie);
           console.log(response.data);
-          console.log(document.cookie)
+          if(cookieUtils.getCookie('admin')){
+            this.$store.commit('updateLoginName','admin111111111');
+            console.log(this.$store.state.loginName);
+          }
           if(response.data.doLogin == 1){
+            // self.$router.push('/')
+            this.$router.push('/')
             // window.location = "/";
-            
           }
         })
         .catch(function(error) {

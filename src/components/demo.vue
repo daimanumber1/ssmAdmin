@@ -185,7 +185,7 @@ export default {
       };
       console.log(obj);
       axios
-        .get("http://localhost:8080/ssm/update", {
+        .get("/api/update", {
           params: obj
         })
         .then(res => {
@@ -209,7 +209,7 @@ export default {
         .then(() => {
           // console.log(val.cust_id);
           axios
-            .get("http://localhost:8080/ssm/delete", {
+            .get("/delete", {
               params: {
                 id: val.cust_id
               }
@@ -238,7 +238,7 @@ export default {
     queryClient() {
       this.currPage = 1;
       axios
-        .get("http://localhost:8080/ssm/hh", {
+        .get("/api/hh", {
           params: {
             currPage: this.currPage,
             a: this.formInline.user,
@@ -268,7 +268,7 @@ export default {
     },
     fun() {
       axios
-        .get("http://localhost:8080/ssm/home", {
+        .get("/api/home", {
           params: {
             currPage: this.currPage
           }
