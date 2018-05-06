@@ -37,20 +37,29 @@ export default {
     };
   },
   methods: {
-    fun() {
-      console.log(1);
+    dologin() {
       axios
-        .get("http://localhost:8080/ssm/home")
+        .get("/doLogin", {
+          params: {
+            username: "admin",
+            password: "admin"
+          }
+        })
         .then(function(response) {
           console.log(response);
-          console.log(response.data.username);
+          console.log(response.data);
+          console.log(document.cookie)
+          if(response.data.doLogin == 1){
+            // window.location = "/";
+            
+          }
         })
         .catch(function(error) {
           console.log(error);
         });
     },
     onSubmit() {
-      console.log("submit!");
+      this.dologin();
     }
   }
 };
@@ -83,7 +92,7 @@ export default {
   margin-left: 18px;
   color: #606266;
 }
-.admin{
+.admin {
   font-size: 14px;
 }
 </style>
