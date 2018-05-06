@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import cn.itcast.ssm.pojo.BaseDict;
 import cn.itcast.ssm.pojo.Customer;
 import cn.itcast.ssm.service.CustomerService;
 import cn.itcast.ssm.service.SystemService;
+import cn.itcast.ssm.service.UserService;
 import cn.itcast.ssm.service.impl.SystemServiceImpl;
 
 //@CrossOrigin(origins = "http://127.0.0.1:5500",allowCredentials="true", maxAge = 3600,allowedHeaders="'Access-Control-Allow-Headers:accept,content-type, exception",methods=RequestMethod.GET)
@@ -31,8 +33,10 @@ public class CustomerController {
 	private CustomerService customerService;
 	@Autowired
 	private SystemService systemService;
+	@Autowired
+	private UserService userService;
 
-	@RequestMapping(value = "/home", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/home", method = RequestMethod.GET)
 	public ModelAndView getHome(@RequestParam(value = "currPage") int currPage, HttpServletResponse response,
 			@RequestParam(value = "a", required = false) String a,
 			@RequestParam(value = "b", required = false) String b,
@@ -57,13 +61,6 @@ public class CustomerController {
 		PageHelper.startPage(currPage, 10);
 		List<Customer> list = customerService.findCustomerList();
 		PageInfo page = new PageInfo(list);
-		// 测试PageInfo全部属性
-		// PageInfo包含了非常全面的分页属性
-		// assertEquals(1, page.getPageNum());
-		// assertEquals(, page.getPageSize());
-		// System.out.println(page.getTotal());
-		// System.out.println(page);
-
 		mv.addObject("page", list);
 		mv.addObject("aa", page);
 		mv.setView(new MappingJackson2JsonView());
@@ -71,7 +68,7 @@ public class CustomerController {
 
 	}
 
-	@RequestMapping("/hh")
+	@RequestMapping("/api/hh")
 	public ModelAndView d(@RequestParam(value = "currPage") int currPage, HttpServletResponse response,
 			@RequestParam(value = "a", required = false) String a, String b, String c, String d) {
 		response.setHeader("Access-Control-Allow-Headers", "X-Requested-With, accept,content-type, exception");
@@ -103,7 +100,7 @@ public class CustomerController {
 		return mv;
 	}
 
-	@RequestMapping("/delete")
+	@RequestMapping("/api/delete")
 	public ModelAndView deleteClient(HttpServletResponse response, @RequestParam("id") String id) {
 		response.setHeader("Access-Control-Allow-Headers", "X-Requested-With, accept,content-type, exception");
 		response.setHeader("Access-Control-Allow-Methods", "GET, POST");
@@ -117,7 +114,7 @@ public class CustomerController {
 
 	}
 
-	@RequestMapping("/update")
+	@RequestMapping("/api/update")
 	public ModelAndView updateClient(HttpServletResponse response, String id, @RequestParam("name") String name,
 			String source, String industry, String level, String linkman, String phone, String mobile, String zipcode,
 			String address) {
@@ -126,20 +123,32 @@ public class CustomerController {
 		response.setHeader("Access-Control-Allow-Credentials", "true");
 		response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
 		ModelAndView mv = new ModelAndView();
-//		System.out.println("source----" + source);
-//		System.out.println("industry----" + industry);
-//		System.out.println("level----" + level);
-//		System.out.println("linkman----" + linkman);
-//		System.out.println("phone----" + phone);
-//		System.out.println("mobile----" + mobile);
-//		System.out.println("zipcode----" + zipcode);
-//		System.out.println("address----" + address);
 		int b = customerService.updateClient(id, name, source, industry, level, linkman, phone, mobile, zipcode,
 				address);
 		mv.addObject("isUpdate", b);
-		System.out.println(b+"return");
+		System.out.println(b + "return");
 		mv.setView(new MappingJackson2JsonView());
 		return mv;
+	}
 
+	@RequestMapping("/api/doLogin")
+	public ModelAndView updateClient(HttpServletResponse response, String username, String password) {
+		response.setHeader("Access-Control-Allow-Headers", "X-Requested-With, accept,content-type, exception");
+		response.setHeader("Access-Control-Allow-Methods", "GET, POST");
+		response.setHeader("Access-Control-Allow-Credentials", "true");
+		response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
+		ModelAndView mv = new ModelAndView();
+		int b = userService.doLogin(username, password);
+		if(b == 1) {
+			Cookie c = new Cookie(username, password);
+			c.setMaxAge(60);
+			c.setPath("/");
+			response.addCookie(c);
+			System.out.println(c.getValue());
+		}
+		mv.addObject("doLogin", b);
+		System.out.println(b + "return");
+		mv.setView(new MappingJackson2JsonView());
+		return mv;
 	}
 }
